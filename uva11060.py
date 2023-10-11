@@ -1,3 +1,4 @@
+import heapq
 count = 1
 while True:
     try:
@@ -15,19 +16,19 @@ while True:
             less_alc, greater_alc = [x for x in input().split(' ')]
             graph[names[less_alc]][names[greater_alc]] = 1
             graus[names[greater_alc]] += 1
-        fila = []
+        heap = []
         order = []
         for x in range(bev_qtd):
             if graus[x] == 0:
-                fila.append(x)
-        while fila:
-            node = fila.pop()
+                heapq.heappush(heap, x)
+        while heap:
+            node = heapq.heappop(heap)
             order.append(node)
             for x in range(len(graph[node])):
                 if graph[node][x]:
                     graus[x] -= 1
                     if (graus[x] == 0):
-                        fila.append(x)
+                        heapq.heappush(heap, x)
         ans_str = ''
         for x in order:
             ans_str += ' ' + indexes[x]
