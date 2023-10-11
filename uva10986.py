@@ -1,41 +1,34 @@
 from collections import deque
 
-
-def dijkstra(matrix, start, end, time):
-    if (start == end):
-        return 1
-    visited = [0 for _ in range(len(matrix))]
-    min_time = [time + 1 for _ in range(len(matrix))]
-    min_time[start] = 0
-    queue = deque()
-    queue.append(start)
-    visited[start] = 1
-    while queue or min_time[end] > time:
-        node = queue.popleft()
-        for x in range(matrix[node]):
-            if (matrix[node][x] != 0):
-                min_time[x] = min(
-                    min_time[x], min_time[node] + matrix[node][x])
-                if (visited[x] != 1):
-                    visited[x] = 1
-                    queue.append(x)
-    return min_time[end] <= time
+MAX_INT = 10001
 
 
-cases = int(input())
-
-for x in range(cases):
-    input()
-    count = 0
-    cages = int(input())
-    exit_index = int(input())
-    limit = int(input())
-    conn = int(input())
-    cages_matrix = [[0] * cages for _ in range(cages)]
-    for i in range(conn):
-        start, end, time = [int(x) for x in input().split(' ')]
-        cages_matrix[start][end] = time
-    for i in range(len(cages_matrix)):
-        if (dijkstra(cages_matrix, i, exit_index, limit)):
-            count += 1
-    print(count)
+entries = int(input())
+count = 1
+for x in range(entries):
+    servers_cont, conns, start, end = [int(x) for x in input().split(' ')]
+    servers = [[0] * servers_cont for _ in range(servers_cont)]
+    for x in range(conns):
+        first, second, weight = [int(x) for x in input().split(' ')]
+        servers[first][second] = weight
+        servers[second][first] = weight
+    visited = [0 for _ in range(servers_cont)]
+    min_dist = [MAX_INT for _ in range(servers_cont)]
+    min_dist[start] = 0
+    fila = deque()
+    fila.append(start)
+    while (fila):
+        next = fila.popleft()
+        for i in range(len(servers[next])):
+            if (servers[next][i] != 0):
+                min_dist[i] = min(
+                    min_dist[next] + servers[next][i], min_dist[i])
+                if (visited[i] != 1):
+                    visited[i] = 1
+                    fila.append(i)
+    if (min_dist[end] == MAX_INT):
+        print(f'Case #{count}: unreachable')
+        count += 1
+        continue
+    print(f'Case #{count}:', min_dist[end])
+    count += 1
