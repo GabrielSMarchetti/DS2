@@ -1,5 +1,6 @@
 import heapq
 count = 1
+ans_list = []
 while True:
     try:
         bev_qtd = int(input())
@@ -14,8 +15,9 @@ while True:
         graus = [0 for _ in range(bev_qtd)]
         for x in range(conn):
             less_alc, greater_alc = [x for x in input().split(' ')]
-            graph[names[less_alc]][names[greater_alc]] = 1
-            graus[names[greater_alc]] += 1
+            if(graph[names[less_alc]][names[greater_alc]] == 0):
+                graph[names[less_alc]][names[greater_alc]] = 1
+                graus[names[greater_alc]] += 1
         heap = []
         order = []
         for x in range(bev_qtd):
@@ -33,11 +35,11 @@ while True:
         for x in order:
             ans_str += ' ' + indexes[x]
         ans_str += '.'
-        print(
-            f"Case #{count}: Dilbert should drink beverages in this order:", ans_str, sep='')
-        print()
+        ans_list.append(
+            f"Case #{count}: Dilbert should drink beverages in this order:{ans_str}")
         count += 1
         input()
-
     except Exception:
+        print(*ans_list, sep="\n\n")
+        print("")
         break
